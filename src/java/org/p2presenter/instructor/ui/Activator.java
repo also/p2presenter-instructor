@@ -3,6 +3,8 @@ package org.p2presenter.instructor.ui;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.p2presenter.instructor.model.Session;
@@ -28,6 +30,8 @@ public class Activator extends AbstractUIPlugin {
 	private InteractivityRecordingView interactivityRecordingView;
 	
 	private Session activeSession;
+	
+	private LiveDisplay liveDisplay;
 	
 	/**
 	 * The constructor
@@ -120,5 +124,29 @@ public class Activator extends AbstractUIPlugin {
 	
 	private void sessionClosed() {
 		this.activeSession = null;
+	}
+	
+	public LiveDisplay getLiveDisplay() {
+		if (liveDisplay == null) {
+	    	Display display = Display.getDefault();
+	    	Monitor primaryMonitor = display.getPrimaryMonitor();
+	    	Monitor secondaryMonitor = null;
+	    	for (Monitor monitor : display.getMonitors()) {
+	    		if (!monitor.equals(primaryMonitor)) {
+	    			secondaryMonitor = monitor;
+	    			break;
+	    		}
+	    	}
+	    	if (secondaryMonitor != null) {
+		    	liveDisplay = new LiveDisplay(display, secondaryMonitor);
+		    	liveDisplay.setVisible(true);
+	    	}
+	    	else {
+	    		// TODO shell
+	    		MessageDialog.openWarning(null, "Live Display Disabled", "Two monitors are required for live display. p2presenter only found one monitor, so live display is unavailable.");
+	    	}
+		}
+		
+		return liveDisplay;
 	}
 }

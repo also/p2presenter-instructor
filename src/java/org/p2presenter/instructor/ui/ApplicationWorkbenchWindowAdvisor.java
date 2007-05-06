@@ -1,17 +1,7 @@
 package org.p2presenter.instructor.ui;
 
 import org.eclipse.jface.action.IStatusLineManager;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Cursor;
-import org.eclipse.swt.graphics.ImageData;
-import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.RGB;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Monitor;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -63,22 +53,5 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
 				});
 			}
 		});
-    	
-    	Display display = getWindowConfigurer().getWindow().getShell().getDisplay();
-    	Monitor primaryMonitor = display.getPrimaryMonitor();
-    	Monitor secondaryMonitor = null;
-    	for (Monitor monitor : display.getMonitors()) {
-    		if (!monitor.equals(primaryMonitor)) {
-    			secondaryMonitor = monitor;
-    			break;
-    		}
-    	}
-    	if (secondaryMonitor != null) {
-	    	LiveDisplay liveDisplay = new LiveDisplay(display, secondaryMonitor);
-	    	liveDisplay.setVisible(true);
-    	}
-    	else {
-    		MessageDialog.openWarning(getWindowConfigurer().getWindow().getShell(), "p2presenter", "p2presenter only found one monitor. Two monitors are required for live display");
-    	}
     }
 }
