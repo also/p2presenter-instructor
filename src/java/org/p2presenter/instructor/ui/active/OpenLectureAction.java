@@ -3,7 +3,6 @@
 package org.p2presenter.instructor.ui.active;
 
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.p2presenter.instructor.model.Lecture;

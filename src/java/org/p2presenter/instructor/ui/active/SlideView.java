@@ -2,9 +2,6 @@
 
 package org.p2presenter.instructor.ui.active;
 
-import java.io.ByteArrayInputStream;
-import java.util.HashMap;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
@@ -20,6 +17,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.p2presenter.instructor.model.Slide;
 import org.p2presenter.instructor.ui.Activator;
 import org.p2presenter.instructor.ui.SlideChangedEvent;
+import org.p2presenter.instructor.ui.SlideImageCache;
 import org.p2presenter.instructor.ui.event.Listener;
 import org.p2presenter.instructor.ui.event.ListenerAdaptor;
 import org.p2presenter.instructor.ui.event.ListenerRegistry;
@@ -37,16 +35,15 @@ public class SlideView extends ViewPart {
 	
 	private Canvas slideCanvas;
 	
-	private Image slideImage;
-	
 	private Listener<SlideChangedEvent> slideChangedListener;
 	private Listener<LectureOpenedEvent> lectureOpenedListener;
 	
 	private ISelectionListener postSelectionListener;
 	
-	private HashMap<Slide, Image> slideImages = new HashMap<Slide, Image>();
+	private SlideImageCache slideImageCache;
 	
 	public void createPartControl(final Composite parent) {
+		slideImageCache = new SlideImageCache(parent.getDisplay());
 		GridLayout layout = new GridLayout();
 		layout.marginHeight = 0;
 		layout.marginWidth = 0;
@@ -60,6 +57,7 @@ public class SlideView extends ViewPart {
 		slideCanvas.addPaintListener(new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				Rectangle c = slideCanvas.getBounds();
+				Image slideImage = slideImageCache.getCurrentImage();
 				if (slideImage != null) {
 					Rectangle s = slideImage.getBounds();
 					e.gc.drawImage(slideImage, 0, 0, s.width, s.height, 0, 0, c.width, c.height);
@@ -78,7 +76,7 @@ public class SlideView extends ViewPart {
 		ListenerRegistry listenerRegistry = plugin.getListenerRegsitry();
 		lectureOpenedListener = new Listener<LectureOpenedEvent>() {
 			public void onEvent(LectureOpenedEvent event) {
-				clearSlideImages();
+				slideImageCache.clear();
 				slideCanvas.redraw();
 				slideLabel.setText("Select a slide...");
 			}
@@ -106,27 +104,8 @@ public class SlideView extends ViewPart {
 		if (slide != null) {
 			slideLabel.setText(slide.getTitle() != null ? slide.getTitle() : "Untitled Slide");
 			
-			synchronized (slideImages) {
-				slideImage = slideImages.get(slide);
-				if (slideImage == null) {
-					slideImage = new Image(getViewSite().getShell().getDisplay(), new ByteArrayInputStream(slide.getImageContent()));
-					slideImages.put(slide, slideImage);
-				}
-			}
-			
-			// refresh the display
-			// TODO is this the right way
+			slideImageCache.setCurrentSlide(slide);
 			slideCanvas.redraw();
-		}
-		else {
-			// TODO clear slide display
-		}
-	}
-	
-	private void clearSlideImages() {
-		slideImage = null;
-		for (Image image : slideImages.values()) {
-			image.dispose();
 		}
 	}
 	
@@ -138,7 +117,7 @@ public class SlideView extends ViewPart {
 		if (postSelectionListener != null) {
 			getSite().getPage().removePostSelectionListener(postSelectionListener);
 		}
-		clearSlideImages();
+		slideImageCache.clear();
 		
 		super.dispose();
 	}
