@@ -138,12 +138,12 @@ public class Activator extends AbstractUIPlugin {
 	    		}
 	    	}
 	    	if (secondaryMonitor != null) {
-		    	liveDisplay = new LiveDisplay(display, secondaryMonitor);
-		    	liveDisplay.setVisible(true);
+		    	liveDisplay = new LiveDisplay(display, secondaryMonitor, true);
 	    	}
 	    	else {
-	    		// TODO shell
-	    		MessageDialog.openWarning(null, "Live Display Disabled", "Two monitors are required for live display. p2presenter only found one monitor, so live display is unavailable.");
+	    		liveDisplay = new LiveDisplay(display, primaryMonitor, false);
+//	    		 TODO shell
+	    		MessageDialog.openWarning(null, "Live Display", "Two monitors are needed for live display. p2presenter only found one monitor, so live display will appear in a window.");
 	    	}
 		}
 		

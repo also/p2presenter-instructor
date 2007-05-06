@@ -18,6 +18,7 @@ import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.p2presenter.instructor.model.Slide;
 import org.p2presenter.instructor.ui.active.LectureOpenedEvent;
+import org.p2presenter.instructor.ui.event.ClassListenerRegistry;
 import org.p2presenter.instructor.ui.event.Listener;
 import org.p2presenter.instructor.ui.event.ListenerAdaptor;
 import org.p2presenter.instructor.ui.event.ListenerRegistry;
@@ -27,36 +28,31 @@ public class LiveDisplay {
 	private Monitor monitor;
 	private Shell shell;
 	
+	private boolean fullscreen;
+	
+	private Cursor invisibleCursor;
+	
 	private SlideImageCache slideImageCache;
 	private Canvas slideCanvas;
 	
 	private Listener<SlideChangedEvent> slideChangedListener;
 	private Listener<LectureOpenedEvent> lectureOpenedListener;
 	
-	public LiveDisplay(Display display, Monitor monitor) {
+	private ClassListenerRegistry<LiveDisplayVisibilityEvent> visibilityListeners;
+	
+	private PaintListener canvasPaintListener;
+	
+	public LiveDisplay(Display display, Monitor monitor, boolean fullscreen) {
 		this.display = display;
-		this.monitor = monitor;
-		
-		shell = new Shell(display, SWT.NO_TRIM);
-    	shell.setBounds(monitor.getBounds());
-    	shell.setLayout(new GridLayout(1, false));
-    	shell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
 
         Color white = display.getSystemColor(SWT.COLOR_WHITE);
 		Color black = display.getSystemColor(SWT.COLOR_BLACK);
 		PaletteData palette = new PaletteData(new RGB[] {white.getRGB(),black.getRGB()});
 		ImageData sourceData = new ImageData(16, 16, 1, palette);
 		sourceData.transparentPixel = 0;
-		Cursor cursor = new Cursor(display, sourceData, 0, 0);
-
-		shell.setCursor(cursor);
+		invisibleCursor = new Cursor(display, sourceData, 0, 0);
 		
-		slideImageCache = new SlideImageCache(display);
-		
-		slideCanvas = new Canvas(shell, SWT.NO_BACKGROUND);
-		slideCanvas.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
-		slideCanvas.setLayoutData(new GridData(GridData.FILL_BOTH));
-		slideCanvas.addPaintListener(new PaintListener() {
+		canvasPaintListener = new PaintListener() {
 			public void paintControl(PaintEvent e) {
 				Rectangle c = slideCanvas.getBounds();
 				Image slideImage = slideImageCache.getCurrentImage();
@@ -68,7 +64,11 @@ public class LiveDisplay {
 					e.gc.fillRectangle(c);
 				}
 			}
-		});
+		};
+		
+		showOn(monitor, fullscreen);
+		
+		slideImageCache = new SlideImageCache(display);
 		
 		ListenerRegistry listenerRegistry = Activator.getDefault().getListenerRegsitry();
 		lectureOpenedListener = new Listener<LectureOpenedEvent>() {
@@ -91,12 +91,72 @@ public class LiveDisplay {
 			}
 		};
 		listenerRegistry.register(SlideChangedEvent.class, slideChangedListener);
+		
+		visibilityListeners = listenerRegistry.getListeners(LiveDisplayVisibilityEvent.class);
+	}
+	
+	public void showOn(Monitor monitor, boolean fullscreen) {
+		if (this.monitor != null && fullscreen == this.fullscreen) {
+			if (monitor.equals(this.monitor)) {
+				return;
+			}
+			else {
+				moveTo(monitor);
+				this.monitor = monitor;
+			}
+		}
+		
+		/* changing to/from fullscreen */
+		
+		this.monitor = monitor;
+		this.fullscreen = fullscreen;
+		
+		if (shell != null) {
+			shell.dispose();
+		}
+		
+		if (fullscreen) {
+			shell = new Shell(display, SWT.NO_TRIM);
+			shell.setCursor(invisibleCursor);
+		}
+		else {
+			shell = new Shell(display, SWT.TITLE | SWT.MIN | SWT.RESIZE);
+			shell.setText("Live Display");
+			// TODO listen for shell closing
+		}
+		moveTo(monitor);
+		
+    	shell.setLayout(new GridLayout(1, false));
+    	shell.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
+		
+		slideCanvas = new Canvas(shell, SWT.NO_BACKGROUND);
+		slideCanvas.setBackground(display.getSystemColor(SWT.COLOR_BLACK));
+		slideCanvas.setLayoutData(new GridData(GridData.FILL_BOTH));
+		slideCanvas.addPaintListener(canvasPaintListener);
+	}
+	
+	public void moveTo(Monitor monitor) {
+		if (fullscreen) {
+	    	shell.setBounds(monitor.getBounds());
+		}
+		else {
+			Rectangle b = monitor.getClientArea();
+			shell.setBounds((int) (b.width * .25), (int) (b.height * .25), (int) (b.width * .5), (int) (b.height * .5));
+		}
+	}
+	
+	public boolean isVisible() {
+		return shell.isVisible();
 	}
 	
 	public void setVisible(boolean visible) {
 		shell.setVisible(visible);
+		visibilityListeners.onEvent(new LiveDisplayVisibilityEvent(this));
 	}
 	
-	// FIXME needs dispose
+	public void dispose() {
+		shell.dispose();
+		invisibleCursor.dispose();
+	}
 	
 }
