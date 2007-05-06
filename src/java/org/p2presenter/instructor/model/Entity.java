@@ -28,5 +28,9 @@ public abstract class Entity<I extends Serializable> {
 		dao.reloadEntity(this);
 	}
 	
+	public String getUri() {
+		return "/entity/" + getClass().getSimpleName().toLowerCase() + '/' + id;
+	}
+	
 	abstract void setAttributes(JsonObject json);
 }

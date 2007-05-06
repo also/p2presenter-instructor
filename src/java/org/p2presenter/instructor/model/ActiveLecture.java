@@ -24,7 +24,7 @@ public class ActiveLecture extends Entity<Integer> {
 	public void setCurrentSlideIndex(int index) {
 		// don't update the lecture if we don't need to
 		if (currentSlideIndex != index) {
-			dao.get("/entity/activeLecture/" + id + "/setCurrentSlideIndex", String.valueOf(index));
+			dao.getString("/entity/activeLecture/" + id + "/setCurrentSlideIndex", String.valueOf(index));
 			currentSlideIndex = index;
 		}
 	}

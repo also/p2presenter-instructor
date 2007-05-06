@@ -34,4 +34,8 @@ public class Slide extends Entity<Integer> {
 	public InteractivityDefinition getInteractivityDefinition() {
 		return interactivityDefinition;
 	}
+	
+	public byte[] getImageContent() {
+		return dao.getBytes(getUri() + "/image", null);
+	}
 }

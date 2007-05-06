@@ -27,16 +27,28 @@ public class Dao {
 	}
 	
 	JsonObject getJson(String uri) {
-		return JsonObject.valueOf(get(uri, null));
+		return JsonObject.valueOf(getString(uri, null));
 	}
 	
-	public String get(String uri, String content) {
+	public String getString(String uri, String content) {
+		IncomingResponseMessage response = getResponse(uri, content);
+		
+		return response != null ? response.getContentAsString() : null;
+	}
+	
+	public byte[] getBytes(String uri, String content) {
+		IncomingResponseMessage response = getResponse(uri, content);
+		
+		return response != null ? response.getContent() : null;
+	}
+	
+	private IncomingResponseMessage getResponse(String uri, String content) {
 		OutgoingRequestMessage request = new OutgoingRequestMessage(getConnection(), uri);
 		request.setContent(content);
 		try {
 			IncomingResponseMessage response = getConnection().sendRequestAndAwaitResponse(request);
 			if (response.getStatus() == 200) {
-				return response.getContentAsString();
+				return response;
 			}
 			else {
 				throw new RuntimeException("URI: " + uri + ", Status: " + response.getStatus() + ", Message: " + response.getContentAsString());
@@ -58,7 +70,7 @@ public class Dao {
 	}
 	
 	public void reloadEntity(Entity entity) {
-		JsonObject json = getJson("/entity/" + entity.getClass().getSimpleName().toLowerCase() + '/' + entity.getId() + "/get");
+		JsonObject json = getJson(entity.getUri() + "/get");
 		if (json == null) {
 			// TODO exception type
 			throw new RuntimeException("Entity unavailable");

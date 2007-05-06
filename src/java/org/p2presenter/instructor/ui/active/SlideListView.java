@@ -52,6 +52,7 @@ public class SlideListView extends ViewPart {
 		slidesListViewer.setLabelProvider(new BaseLabelProvider());
 		slidesTab.setControl(slidesComposite);
 		
+		// TODO should this be removed on dispose?
 		slidesListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
