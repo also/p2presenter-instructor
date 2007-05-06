@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+
+   <extension
+         id="application"
+         point="org.eclipse.core.runtime.applications">
+      <application>
+         <run
+               class="org.p2presenter.instructor.ui.Application">
+         </run>
+      </application>
+   </extension>
+   <extension
+         point="org.eclipse.ui.perspectives">
+      <perspective
+            class="org.p2presenter.instructor.ui.active.ActivePerspective"
+            icon="icons/eye.png"
+            id="org.p2presenter.instructor.ui.active"
+            name="Presentation">
+      </perspective>
+      <perspective
+            class="org.p2presenter.instructor.ui.builder.BuilderPerspective"
+            icon="icons/bricks.png"
+            id="org.p2presenter.instructor.ui.builder"
+            name="Builder"/>
+   </extension>
+   <extension
+         id="instructor"
+         point="org.eclipse.core.runtime.products">
+      <product
+            application="org.p2presenter.instructor.ui.application"
+            name="p2presenter Instructor">
+         <property
+               name="aboutText"
+               value="p2presenter Instructor&#x0A;Version 1.0.0&#x0A;&#x0A;For more information, visit http://p2presenter.org/"/>
+      </product>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            allowMultiple="false"
+            category="org.p2presenter.instructor.ui.active"
+            class="org.p2presenter.instructor.ui.active.SlideView"
+            icon="icons/picture.png"
+            id="org.p2presenter.instructor.ui.active.slideview"
+            name="Slide"/>
+      <view
+            category="org.p2presenter.instructor.ui.active"
+            class="org.p2presenter.instructor.ui.active.SlideListView"
+            icon="icons/film.png"
+            id="org.p2presenter.instructor.ui.active.slideListView"
+            name="Slides"/>
+      <view
+            category="org.p2presenter.instructor.ui.active"
+            class="org.p2presenter.instructor.ui.active.ParticipantListView"
+            icon="icons/group.png"
+            id="org.p2presenter.instructor.ui.active.participantlistview"
+            name="Participants"/>
+      <view
+            category="org.p2presenter.instructor.ui.active"
+            class="org.p2presenter.instructor.ui.active.SubmissionListView"
+            id="org.p2presenter.instructor.ui.active.submissionlistview"
+            name="Submissions"/>
+      <view
+            class="org.p2presenter.instructor.ui.InteractivityFormView"
+            id="org.uoregon.cs.presenter.instructor.ui.views.interactivityformview"
+            name="Interactivity Definition"/>
+      <view
+            category="org.p2presenter.instructor.ui.active"
+            class="org.p2presenter.instructor.ui.active.InteractivityRecordingView"
+            id="org.p2presenter.instructor.ui.active.interactivityrecordingview"
+            name="Interactivity Recording"/>
+      <category
+            id="org.p2presenter.instructor.ui.builder.pesudo"
+            name="Pseudocode"/>
+      <view
+            category="org.p2presenter.instructor.ui.builder.pesudo"
+            class="org.p2presenter.instructor.ui.builder.PseudoSnippetsView"
+            id="org.p2presenter.instructor.ui.builder.pseudosnippets"
+            name="Snippets"/>
+      <category
+            id="org.p2presenter.instructor.ui.active"
+            name="Presentation"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="edu.uoregon.cs.p2presenter.interactivity.monitor.InteractivityEvent"
+            class="org.p2presenter.instructor.ui.model.AdapterFactory">
+         <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+      </factory>
+      <factory
+            adaptableType="edu.uoregon.cs.p2presenter.interactivity.monitor.InteractivityMonitor"
+            class="org.p2presenter.instructor.ui.model.AdapterFactory">
+         <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+      </factory>
+      <factory
+            adaptableType="org.p2presenter.instructor.model.Course"
+            class="org.p2presenter.instructor.ui.model.AdapterFactory">
+         <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+      </factory>
+      <factory
+            adaptableType="org.p2presenter.instructor.model.Lecture"
+            class="org.p2presenter.instructor.ui.model.AdapterFactory">
+         <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+      </factory>
+      <factory
+            adaptableType="org.p2presenter.instructor.model.Slide"
+            class="org.p2presenter.instructor.ui.model.AdapterFactory">
+         <adapter type="org.eclipse.ui.model.IWorkbenchAdapter"/>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.p2presenter.instructor.ui.preferences.ServersPreferencePage"
+            id="edu.uoregon.cs.presenter.instructor.ui.preferences.ServersPreferencePage"
+            name="Servers"/>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.p2presenter.instructor.ui.preferences.PreferenceInitializer"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.p2presenter.instructor.ui.builder.PseudoEditor"
+            default="false"
+            icon="icons/page.png"
+            id="org.p2presenter.instructor.ui.builder.pseudoeditor"
+            name="Pseudocode"/>
+   </extension>
+
+</plugin>
