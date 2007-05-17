@@ -40,4 +40,17 @@ public class Course extends Entity<Integer> {
 	public String getTitle() {
 		return title;
 	}
+	
+	public void addLecture(Lecture lecture) {
+		if (lecture.getId() != null) {
+			throw new IllegalArgumentException("Lecture has already been saved");
+		}
+		
+		lecture.dao = dao;
+		
+		JsonObject lectureJson = dao.getJson(getUri() + "/addLecture", lecture.toJson(Lecture.DEFAULT_PROPERTIES).toString());
+		lecture.setAttributes(lectureJson);
+		
+		reload();
+	}
 }

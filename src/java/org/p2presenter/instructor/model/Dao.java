@@ -26,11 +26,25 @@ public class Dao {
 		return session.getConnection();
 	}
 	
-	JsonObject getJson(String uri) {
-		return JsonObject.valueOf(getString(uri, null));
+	public JsonObject getJson(String uri) {
+		return getJson(uri, (String) null);
+	}
+	
+	public JsonObject getJson(String uri, String content) {
+		return JsonObject.valueOf(getString(uri, content));
+	}
+	
+	public JsonObject getJson(String uri, byte[] content) {
+		return JsonObject.valueOf(getString(uri, content));
 	}
 	
 	public String getString(String uri, String content) {
+		IncomingResponseMessage response = getResponse(uri, content);
+		
+		return response != null ? response.getContentAsString() : null;
+	}
+	
+	public String getString(String uri, byte[] content) {
 		IncomingResponseMessage response = getResponse(uri, content);
 		
 		return response != null ? response.getContentAsString() : null;
@@ -45,13 +59,25 @@ public class Dao {
 	private IncomingResponseMessage getResponse(String uri, String content) {
 		OutgoingRequestMessage request = new OutgoingRequestMessage(getConnection(), uri);
 		request.setContent(content);
+		
+		return getResponse(request);
+	}
+	
+	private IncomingResponseMessage getResponse(String uri, byte[] content) {
+		OutgoingRequestMessage request = new OutgoingRequestMessage(getConnection(), uri);
+		request.setContent(content);
+		
+		return getResponse(request);
+	}
+	
+	private IncomingResponseMessage getResponse(OutgoingRequestMessage request) {
 		try {
 			IncomingResponseMessage response = getConnection().sendRequestAndAwaitResponse(request);
 			if (response.getStatus() == 200) {
 				return response;
 			}
 			else {
-				throw new RuntimeException("URI: " + uri + ", Status: " + response.getStatus() + ", Message: " + response.getContentAsString());
+				throw new RuntimeException("URI: " + request.getUri() + ", Status: " + response.getStatus() + ", Message: " + response.getContentAsString());
 			}
 		}
 		catch (InterruptedException ex) {
