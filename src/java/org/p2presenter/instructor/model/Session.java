@@ -32,11 +32,14 @@ public class Session {
 	
 	private ActiveLecture activeLecture;
 	
+	private String username;
+	
 	public Session(Activator plugin, String host, String username, String password) throws IOException {
 		this.plugin = plugin;
+		this.username = username;
 		connection = new LocalConnection(new Socket(host, 9000));
 		connection.start();
-		AuthenticationUtils.login(connection, "ryan", "rb041801");
+		AuthenticationUtils.login(connection, username, password);
 		
 		ListenerRegistry listenerRegistry = plugin.getListenerRegsitry();
 		sessionClosedListeners = listenerRegistry.getListeners(SessionClosedEvent.class);
@@ -93,8 +96,7 @@ public class Session {
 	}
 	
 	public String getUsername() {
-		// FIXME
-		return "ryan";
+		return username;
 	}
 	
 	public Person getPerson() {
