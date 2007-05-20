@@ -21,8 +21,9 @@ import org.p2presenter.instructor.ui.Activator;
 import org.p2presenter.instructor.ui.model.BaseLabelProvider;
 
 
-class SelectCourseWizardPage extends WizardPage {
+public class SelectCourseWizardPage extends WizardPage {
 	private ListViewer courseListViewer;
+	private Course course;
 	
 	public SelectCourseWizardPage() {
 		super("selectCourse");
@@ -52,6 +53,14 @@ class SelectCourseWizardPage extends WizardPage {
 		courseListViewer.setLabelProvider(new BaseLabelProvider());
 		courseListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = courseListViewer.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					IStructuredSelection structuredSelection = (IStructuredSelection) selection;
+					course = (Course) structuredSelection.getFirstElement();
+				}
+				else {
+					course = null;
+				}
 				updatePageComplete();
 			}
 		});
@@ -66,7 +75,6 @@ class SelectCourseWizardPage extends WizardPage {
 		try {
 			Person person = Activator.getDefault().getActiveSession().getPerson();
 			courseListViewer.setInput(person.getCoursesTaught());
-			
 		}
 		catch (Exception ex) {
 			// TODO
@@ -87,13 +95,7 @@ class SelectCourseWizardPage extends WizardPage {
 		}
 	}
 	
-	Course getCourse() {
-		ISelection selection = courseListViewer.getSelection();
-		if (selection instanceof IStructuredSelection) {
-			IStructuredSelection structuredSelection = (IStructuredSelection) selection;
-			return (Course) structuredSelection.getFirstElement();
-		}
-		
-		return null;
+	public Course getCourse() {
+		return course;
 	}
 }

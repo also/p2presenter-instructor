@@ -89,8 +89,6 @@ class SelectLectureWizardPage extends WizardPage {
 	}
 	
 	Lecture getLecture() {
-		
-		
 		return lecture;
 	}
 }

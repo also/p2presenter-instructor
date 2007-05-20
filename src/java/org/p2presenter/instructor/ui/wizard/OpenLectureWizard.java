@@ -6,8 +6,6 @@ import org.eclipse.jface.wizard.Wizard;
 import org.p2presenter.instructor.model.Course;
 import org.p2presenter.instructor.model.Lecture;
 
-
-
 public class OpenLectureWizard extends Wizard {
 	private SelectCourseWizardPage selectCourseWizardPage;
 	private SelectLectureWizardPage selectLectureWizardPage;
