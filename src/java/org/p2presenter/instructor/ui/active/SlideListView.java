@@ -5,8 +5,8 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ListViewer;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
@@ -27,7 +27,7 @@ public class SlideListView extends ViewPart {
 	
 	private CTabFolder tabs;
 	private CTabItem slidesTab, whiteboardsTab;
-	private ListViewer slidesListViewer, whiteboardsListViewer;
+	private TableViewer slidesViewer, whiteboardsListViewer;
 	
 	private Activator plugin;
 	
@@ -47,13 +47,13 @@ public class SlideListView extends ViewPart {
 		
 		Composite slidesComposite = new Composite(tabs, SWT.NONE);
 		slidesComposite.setLayout(new FillLayout(SWT.VERTICAL));
-		slidesListViewer = new ListViewer(slidesComposite, SWT.NONE);
-		slidesListViewer.setContentProvider(new ArrayContentProvider());
-		slidesListViewer.setLabelProvider(new BaseLabelProvider());
+		slidesViewer = new TableViewer(slidesComposite, SWT.V_SCROLL);
+		slidesViewer.setContentProvider(new ArrayContentProvider());
+		slidesViewer.setLabelProvider(new BaseLabelProvider());
 		slidesTab.setControl(slidesComposite);
 		
 		// TODO should this be removed on dispose?
-		slidesListViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		slidesViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection selection = (IStructuredSelection) event.getSelection();
 				slideChangedListeners.onEvent(new SlideChangedEvent(this, (Slide) selection.getFirstElement()));
@@ -65,7 +65,7 @@ public class SlideListView extends ViewPart {
 		
 		Composite whiteboardsComposite = new Composite(tabs, SWT.NONE);
 		whiteboardsComposite.setLayout(new FillLayout(SWT.VERTICAL));
-		whiteboardsListViewer = new ListViewer(whiteboardsComposite, SWT.NONE);
+		whiteboardsListViewer = new TableViewer(whiteboardsComposite, SWT.NONE);
 		whiteboardsTab.setControl(whiteboardsComposite);
 		
 		tabs.setSelection(slidesTab);
@@ -88,7 +88,7 @@ public class SlideListView extends ViewPart {
 		listenerRegistry.register(LectureOpenedEvent.class, new Listener<LectureOpenedEvent>() {
 			public void onEvent(LectureOpenedEvent event) {
 				lecture = event.getLecture();
-				slidesListViewer.setInput(lecture.getSlides());
+				slidesViewer.setInput(lecture.getSlides());
 			}
 		});
 	}
