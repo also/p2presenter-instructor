@@ -14,6 +14,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.p2presenter.instructor.model.Slide;
@@ -120,8 +121,16 @@ public class LiveDisplay {
 			shell.setCursor(invisibleCursor);
 		}
 		else {
-			shell = new Shell(display, SWT.TITLE | SWT.MIN | SWT.RESIZE);
+			shell = new Shell(display, SWT.TITLE | SWT.MIN | SWT.CLOSE | SWT.RESIZE);
 			shell.setText("Live Display");
+			shell.addListener(SWT.Close, new org.eclipse.swt.widgets.Listener() {
+			
+				public void handleEvent(Event event) {
+					event.doit = false;
+					setVisible(false);
+				}
+			
+			});
 			// TODO listen for shell closing
 		}
 		moveTo(monitor);
