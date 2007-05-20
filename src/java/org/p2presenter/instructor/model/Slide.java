@@ -9,6 +9,8 @@ public class Slide extends Entity<Integer> {
 	private String title;
 	private String body;
 	private InteractivityDefinition interactivityDefinition;
+	
+	private byte[] imageContent;
 
 	@Override
 	void setAttributes(JsonObject json) {
@@ -36,6 +38,10 @@ public class Slide extends Entity<Integer> {
 	}
 	
 	public byte[] getImageContent() {
-		return dao.getBytes(getUri() + "/image", null);
+		if (imageContent == null) {
+			// TODO don't always keep in memory
+			imageContent = dao.getBytes(getUri() + "/image", null);
+		}
+		return imageContent;
 	}
 }
