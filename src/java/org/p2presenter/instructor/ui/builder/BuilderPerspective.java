@@ -13,6 +13,7 @@ public class BuilderPerspective implements IPerspectiveFactory {
 	public void createInitialLayout(IPageLayout layout) {
 		// TODO Auto-generated method stub
 		layout.addPerspectiveShortcut(ActivePerspective.ID);
+		layout.addActionSet("org.p2presenter.instructor.ui.builderActionSet");
 	}
 
 }

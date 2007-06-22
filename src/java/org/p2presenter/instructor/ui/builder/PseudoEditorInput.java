@@ -20,7 +20,7 @@ public class PseudoEditorInput implements IEditorInput {
 
 	public String getName() {
 		// TODO
-		return "";
+		return "Pseudocode";
 	}
 
 	public IPersistableElement getPersistable() {

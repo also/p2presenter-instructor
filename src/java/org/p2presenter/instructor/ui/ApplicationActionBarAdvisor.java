@@ -21,7 +21,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
     private IWorkbenchAction newWindowAction;
     private IWorkbenchAction preferencesAction;
     private IWorkbenchAction editPseudocodeAction;
-    private IWorkbenchAction showLiveDisplayAction;
     private IContributionItem viewList;
     
     private ConnectAction connectAction;
@@ -49,9 +48,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         editPseudocodeAction = new EditPseudocodeAction(window);
         register(editPseudocodeAction);
         
-        showLiveDisplayAction = new LiveDisplayAction("Show &Live Display");
-        register(showLiveDisplayAction);
-        
         viewList = ContributionItemFactory.VIEWS_SHORTLIST.create(window);
     }
 
@@ -78,7 +74,6 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         MenuManager viewMenu = new MenuManager("Show &View");
         viewMenu.add(viewList);
         windowMenu.add(viewMenu);
-        windowMenu.add(showLiveDisplayAction);
         
         // Help
         helpMenu.add(aboutAction);

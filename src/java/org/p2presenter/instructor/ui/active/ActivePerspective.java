@@ -23,5 +23,6 @@ public class ActivePerspective implements IPerspectiveFactory {
 		layout.addShowViewShortcut(SlideView.ID);
 		layout.addShowViewShortcut(ParticipantListView.ID);
 		layout.addShowViewShortcut(InteractivityRecordingView.ID);
+		layout.addActionSet("org.p2presenter.instructor.ui.liveDisplayActionSet");
 	}
 }

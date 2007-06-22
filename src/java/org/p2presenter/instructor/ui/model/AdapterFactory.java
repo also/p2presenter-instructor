@@ -105,6 +105,16 @@ public class AdapterFactory implements IAdapterFactory {
 		}
 	
 		public ImageDescriptor getImageDescriptor(Object object) {
+			/*final Slide slide = (Slide) object;
+			// XXX not ideal
+			return new ImageDescriptor() {
+				@Override
+				public ImageData getImageData() {
+					return slide.getDefaultImage(PlatformUI.getWorkbench().getDisplay()).getImageData().scaledTo(160, 120);
+				}
+				
+				
+			};*/
 			return null;
 		}
 	

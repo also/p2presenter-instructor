@@ -130,6 +130,59 @@
             icon="icons/page.png"
             id="org.p2presenter.instructor.ui.builder.pseudoeditor"
             name="Pseudocode"/>
+      <editor
+            class="org.p2presenter.instructor.ui.builder.PseudoDebuggerEditor"
+            default="false"
+            icon="icons/page.png"
+            id="org.p2presenter.instructor.ui.builder.pseudoDebuggerEditor"
+            name="Pseudocode Debugger"/>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            id="org.p2presenter.instructor.ui.liveDisplayActionSet"
+            label="Live Display Actions">
+         <action
+               class="org.p2presenter.instructor.ui.LiveDisplayActionDelagate"
+               icon="icons/eye.png"
+               id="org.p2presenter.instructor.ui.liveDisplayAction"
+               label="Show Live Display"
+               style="toggle"
+               toolbarPath="Normal/additions"/>
+      </actionSet>
+      <actionSet
+            id="org.p2presenter.instructor.ui.builder.pseudoEditorActionSet"
+            label="Pseudocode Editor Actions">
+         <action
+               class="org.p2presenter.instructor.ui.builder.CreateSnippetFromSelectionAction"
+               id="org.p2presenter.instructor.ui.builder.createSnippetFromSelectionAction"
+               label="Create Snippet"
+               style="push"
+               toolbarPath="Normal/additions"/>
+      </actionSet>
+      <actionSet
+            id="org.p2presenter.instructor.ui.builderActionSet"
+            label="Builder Actions">
+         <action
+               class="org.p2presenter.instructor.ui.builder.NewLectureActionDelegate"
+               icon="icons/add.png"
+               id="org.p2presenter.instructor.ui.builder.newLectureAction"
+               label="New Lecture"
+               style="push"
+               toolbarPath="Normal/additions"/>
+         <action
+               class="org.p2presenter.instructor.ui.builder.ShowPseudoDebuggerActionDelegate"
+               id="org.p2presenter.instructor.ui.builder.showPseudoDebugger"
+               label="Show Pseudocode Debugger"
+               style="push"
+               toolbarPath="Normal/additions"/>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.actionSetPartAssociations">
+      <actionSetPartAssociation targetID="org.p2presenter.instructor.ui.builder.pseudoEditorActionSet">
+         <part id="org.p2presenter.instructor.ui.builder.pseudoeditor"/>
+      </actionSetPartAssociation>
    </extension>
 
 </plugin>

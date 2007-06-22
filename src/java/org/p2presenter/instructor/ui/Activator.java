@@ -10,6 +10,7 @@ import org.osgi.framework.BundleContext;
 import org.p2presenter.instructor.model.Session;
 import org.p2presenter.instructor.model.SessionClosedEvent;
 import org.p2presenter.instructor.ui.active.InteractivityRecordingView;
+import org.p2presenter.instructor.ui.builder.PseudoEditor;
 import org.p2presenter.instructor.ui.event.Listener;
 import org.p2presenter.instructor.ui.event.ListenerRegistry;
 
@@ -100,7 +101,7 @@ public class Activator extends AbstractUIPlugin {
 			
 			// TODO prompt for username, password
 			try {
-				activeSession = new Session(this, host, "ryan", "rb041801");
+				activeSession = new Session(this, host, "instructor", "instructor");
 			}
 			catch (Exception ex) {
 				// TODO
@@ -148,5 +149,15 @@ public class Activator extends AbstractUIPlugin {
 		}
 		
 		return liveDisplay;
+	}
+	
+	// XXX
+	private PseudoEditor pseudoEditor;
+	public void setPseudoEditor(PseudoEditor pseudoEditor) {
+		this.pseudoEditor = pseudoEditor;
+	}
+	
+	public PseudoEditor getPseudoEditor() {
+		return pseudoEditor;
 	}
 }
