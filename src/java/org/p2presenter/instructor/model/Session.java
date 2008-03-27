@@ -16,7 +16,7 @@ import org.p2presenter.instructor.ui.event.ClassListenerRegistry;
 import org.p2presenter.instructor.ui.event.Listener;
 import org.p2presenter.instructor.ui.event.ListenerRegistry;
 import org.p2presenter.messaging.Connection;
-import org.p2presenter.messaging.ConnectionListener;
+import org.p2presenter.messaging.ConnectionLifecycleListener;
 import org.p2presenter.messaging.LocalConnection;
 
 import edu.uoregon.cs.p2presenter.authentication.AuthenticationUtils;
@@ -45,7 +45,7 @@ public class Session {
 		sessionClosedListeners = listenerRegistry.getListeners(SessionClosedEvent.class);
 		lectureStartedListeners = listenerRegistry.getListeners(LectureStartedEvent.class);
 		
-		connection.addConnectionListener(new ConnectionListener() {
+		connection.addConnectionLifecycleListener(new ConnectionLifecycleListener() {
 			public void connectionClosed(Connection connection) {
 				sessionClosedListeners.onEvent(new SessionClosedEvent(Session.this));
 			}
